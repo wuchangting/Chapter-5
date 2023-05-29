@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -63,7 +64,14 @@ public class MainActivity extends AppCompatActivity {
                 if (response.body() != null) {
                     List<ArticleResponse.Article> articles = response.body().articles;
                     Log.d("retrofit", articles.toString());
+
+                    Intent intent = getIntent();
+                    ArticleResponse.Article article = new ArticleResponse.Article();
+                    article.id = articles.get(articles.size()-1).id+1;
+                    article.name = intent.getStringExtra("username");
+                    article.order = articles.get(articles.size()-1).order+3;
                     if (articles.size() != 0) {
+                        articles.add(article);
                         mAdapter.setData(response.body().articles);
                         mAdapter.notifyDataSetChanged();
                     }

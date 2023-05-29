@@ -2,8 +2,10 @@ package com.byted.chapter5;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,7 +49,22 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
                 // todo 做网络请求
+                User user = new User(name,password);
+                apiService.register(user,200,"success").enqueue(new Callback<UserResponse>() {
+                    @Override
+                    public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        intent.putExtra("username",user.nickname);
+                        intent.putExtra("password",user.password);
+                        startActivity(intent);
+                    }
 
+                    @Override
+                    public void onFailure(Call<UserResponse> call, Throwable t) {
+                        Log.d("fail", "onFailure: 请求失败");
+
+                    }
+                });
 
             }
         });
